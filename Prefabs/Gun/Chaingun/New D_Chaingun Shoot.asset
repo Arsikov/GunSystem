@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b6c007c2fbad945aa7b77f215257ed, type: 3}
+  m_Name: New D_Chaingun Shoot
+  m_EditorClassIdentifier: 
+  Damage: 10
+  HitObjectForce: 5
+  ProjectilePrefab: {fileID: 2011656741343543340, guid: efb92ab6cd317434baca9e597996acbd, type: 3}
+  ProjectileSpeed: 50
+  ProjectileTravelDist: 40
+  SpreadFactor: 0.1

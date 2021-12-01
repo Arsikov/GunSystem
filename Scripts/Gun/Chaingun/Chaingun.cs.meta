@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 1cc0ee134f6871f48b01cf60d3d4256b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ShootPoint: {instanceID: 0}
+  - D_Shoot: {fileID: 11400000, guid: 0d6ccc32fea14804790f6c082b171c38, type: 2}
+  - D_ShootInput: {fileID: 11400000, guid: 19dab11e7be940e48a59b12297ba46c8, type: 2}
+  - D_Ammo: {fileID: 11400000, guid: a2c03d5f598b8ef408b53ccf9dba274f, type: 2}
+  - D_Shield: {fileID: 11400000, guid: 56e45fad0ec99b346be421c5f8f50397, type: 2}
+  - D_ShieldInput: {fileID: 11400000, guid: 0063703c2b6ef24488a5eafb6d7e49b6, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
