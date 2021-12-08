@@ -8,6 +8,8 @@ namespace GunClasses
         public event Action OnActivate;
         public event Action OnTrigger;
 
+        public float LastTimeTrigger { get; set; }
+
         public GunMode()
         {
             OnActivate += Activate;
@@ -15,19 +17,10 @@ namespace GunClasses
         }
 
         // update per frame
-        protected virtual void Execute()
-        {
+        public abstract void Update();
 
-        }
+        protected abstract void Activate();
 
-        protected virtual void Activate()
-        {
-
-        }
-
-        protected virtual void Trigger()
-        {
-
-        }
+        protected abstract void Trigger();
     }
 }

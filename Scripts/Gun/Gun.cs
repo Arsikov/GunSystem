@@ -2,7 +2,6 @@ using UnityEngine;
 using PlayerClasses.GunClasses;
 using GunClasses.AmmoClasses;
 
-// gotta rewrite Gun to Holder relationship, espesially Gun's movement
 namespace GunClasses
 {
     public abstract class Gun : MonoBehaviour
