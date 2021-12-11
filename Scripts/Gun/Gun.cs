@@ -7,14 +7,13 @@ namespace GunClasses
     public abstract class Gun : MonoBehaviour
     {
         public PlayerGunService Holder { get; protected set; }
-        public Transform ShootPoint { get; private set; }
+        public Transform ShootPoint;
 
         protected Rigidbody2D _gunRb;
 
         protected virtual void Awake()
         {
             _gunRb = GetComponent<Rigidbody2D>();
-            ShootPoint = transform.GetChild(0);
         }
 
         protected virtual void FixedUpdate()
@@ -26,6 +25,11 @@ namespace GunClasses
         {
             transform.position = pos;
             _gunRb.rotation = rotation;
+        }
+
+        public void SetHolder(PlayerGunService holder)
+        {
+            Holder = holder;
         }
     }
 }

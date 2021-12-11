@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace GunClasses
 {
-    public abstract class GunMode
+    public abstract class GunMod
     {
         public event Action OnActivate;
         public event Action OnTrigger;
 
         public float LastTimeTrigger { get; set; }
 
-        public GunMode()
+        public GunMod()
         {
             OnActivate += Activate;
             OnTrigger += Trigger;

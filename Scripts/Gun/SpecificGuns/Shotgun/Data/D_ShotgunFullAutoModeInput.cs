@@ -2,7 +2,8 @@
 
 namespace GunClasses.ShotgunClasses
 {
-    class D_ShotgunFullAutoModeInput : D_GunModeInput
+    public class D_ShotgunFullAutoModInput : D_GunModInput
     {
+        public float AttackTime;
     }
 }

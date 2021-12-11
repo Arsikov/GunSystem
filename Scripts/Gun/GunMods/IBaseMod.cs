@@ -2,7 +2,7 @@
 
 namespace GunClasses
 {
-    interface IBaseMode
+    interface IBaseMod
     {
         
     }

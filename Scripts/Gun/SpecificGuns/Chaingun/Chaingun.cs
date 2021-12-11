@@ -4,8 +4,8 @@ namespace GunClasses.ChaingunClasses
 {
     public class Chaingun : Gun
     {
-        public GunMode ShieldMode { get; private set; }
-        public GunMode BaseMode { get; private set; }
+        public GunMod ShieldMod { get; private set; }
+        public GunMod BaseMod { get; private set; }
 
         protected override void Awake()
         {

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GunClasses.AmmoClasses
 {
-    class GunBulletAmmo : GunAmmo
+    public class GunEnergyAmmoContainer : GunAmmoContainer
     {
     }
 }

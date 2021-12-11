@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GunClasses.ShotgunClasses
 {
-    public class ShotgunFullAutoMode : GunMode
+    public class ShotgunBaseMode : GunMod, IBaseMod
     {
         public override void Update()
         {

@@ -2,7 +2,7 @@
 
 namespace GunClasses.ShotgunClasses
 {
-    class D_ShotgunBaseModeInput : D_GunModeInput
+    public class D_ShotgunBaseModInput : D_GunModInput
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GunClasses.ChaingunClasses
 {
-    public class ChaingunBaseMode : GunMode, IBaseMode
+    public class ChaingunBaseMod : GunMod, IBaseMod
     {
         public override void Update()
         {

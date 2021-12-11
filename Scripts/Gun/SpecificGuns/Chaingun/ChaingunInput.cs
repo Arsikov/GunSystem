@@ -6,27 +6,27 @@ namespace GunClasses.ChaingunClasses
 {
     public class ChaingunInput : GunInput   
     {
-        public event Action OnSpawnShielModeInput;
+        public event Action OnBaseModInput;
+
+        public event Action OnSpawnShielModInput;
         public event Action OnRemoveShieldModeInput;
 
-        private D_ChaingunBaseModeInput D_baseModeInput;
-        private D_ChaingunShieldModeInput D_shieldModeInput;
+        private D_ChaingunBaseModInput D_baseModInput;
+        private D_ChaingunShieldModInput D_shieldModInput;
 
         private float _attackTime;
 
         private float _maxActiveTime;
         private bool _shieldActivated;
 
-        private Chaingun _chaingun;
-
-        public ChaingunInput(D_GunModeTriggerInput D_gunModeTriggerInput, Chaingun chaingun, D_ChaingunBaseModeInput D_baseModeInput, D_ChaingunShieldModeInput D_shieldModeInput) : base(D_gunModeTriggerInput)
+        public ChaingunInput(D_GunModTriggerInput D_gunModTriggerInput, D_ChaingunBaseModInput D_baseModInput, D_ChaingunShieldModInput D_shieldModInput) : base(D_gunModTriggerInput)
         {
-            this.D_baseModeInput = D_baseModeInput;
-            this.D_shieldModeInput = D_shieldModeInput;
+            this.D_baseModInput = D_baseModInput;
+            this.D_shieldModInput = D_shieldModInput;
 
-            _attackTime = D_baseModeInput.AttackTime;
+            _attackTime = D_baseModInput.AttackTime;
 
-            _maxActiveTime = D_shieldModeInput.MaxActiveTime;
+            _maxActiveTime = D_shieldModInput.MaxActiveTime;
             _shieldActivated = false;
         }
 
@@ -38,21 +38,21 @@ namespace GunClasses.ChaingunClasses
 
         private void HandleBaseModeTriggerInput()
         {
-            if (GetKeyDown(D_gunModeTriggerInput.BaseModeTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModeInput.MinTimeBtwTriggers))
+            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
             {
-                InvokeOnModeDownInputEvent();
+                OnBaseModInput?.Invoke();
                 SetLastTimeTriggered();
             }
 
-            if (GetKeyDown(D_gunModeTriggerInput.BaseModeTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModeInput.MinTimeBtwTriggers))
+            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
             {
                 _attackTime -= Time.deltaTime;
 
                 if (_attackTime < 0)
                 {
-                    _attackTime = D_baseModeInput.AttackTime;
+                    _attackTime = D_baseModInput.AttackTime;
 
-                    InvokeOnModeDownInputEvent();
+                    OnBaseModInput?.Invoke();
                     SetLastTimeTriggered();
                 }
             }
@@ -60,7 +60,7 @@ namespace GunClasses.ChaingunClasses
 
         private void HandleShieldModeTriggerInput()
         {
-            if (GetKeyDown(D_gunModeTriggerInput.BaseModeTriggerInput) && !_shieldActivated)
+            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && !_shieldActivated)
             {
                 _shieldActivated = true;
             }
@@ -68,27 +68,20 @@ namespace GunClasses.ChaingunClasses
             if (_shieldActivated)
             {
                 _maxActiveTime -= Time.deltaTime;
-                OnSpawnShielModeInput();
+                OnSpawnShielModInput?.Invoke();
 
                 if (_maxActiveTime < 0)
                 {
-                    OnRemoveShieldModeInput();
+                    OnRemoveShieldModeInput?.Invoke();
                     _shieldActivated = false;
                     SetLastTimeTriggered();
                 }
             }
 
-            while(!_shieldActivated && _maxActiveTime < D_shieldModeInput.MaxActiveTime)
+            while(!_shieldActivated && _maxActiveTime < D_shieldModInput.MaxActiveTime)
             {
                 _maxActiveTime += Time.deltaTime;
             }
-        }
-
-        protected override void InvokeOnModeDownInputEvent()
-        {
-            base.InvokeOnModeDownInputEvent();
-
-
         }
     }
 }

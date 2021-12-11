@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using GunClasses.DataClasses;
+﻿using GunClasses.DataClasses;
 
 namespace GunClasses.ChaingunClasses
 {
-    public class D_ChaingunBaseModeInput : D_GunModeInput
+    public class D_ChaingunBaseModInput : D_GunModInput
     {
         public float AttackTime;
     }
