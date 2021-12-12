@@ -4,7 +4,8 @@ namespace GunClasses.DataClasses
 {
     public abstract class D_GunMod : ScriptableObject
     {
-        public int AmmoCostOnTrigger;
+        public int AmmoCost;
+        public float MinTimeBtwFire;
         public int Damage;
         public int ForceToHitObject;
     }

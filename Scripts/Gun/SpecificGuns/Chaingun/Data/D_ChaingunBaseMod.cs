@@ -2,7 +2,7 @@
 
 namespace GunClasses.ChaingunClasses
 {
-    public class D_ChaingunBaseModInput : D_GunModInput
+    public class D_ChaingunBaseMod : D_GunMod
     {
         public float AttackTime;
     }

@@ -5,13 +5,11 @@ namespace GunClasses
 {
     public abstract class GunInput
     {
-        protected D_GunModTriggerInput D_gunModTriggerInput;
+        protected D_GunModFireInput D_gunModFireInput;
 
-        private float _lastTimeTriggered;
-
-        public GunInput(D_GunModTriggerInput D_gunModTriggerInput)
+        public GunInput(D_GunModFireInput D_gunModFireInput)
         {
-            this.D_gunModTriggerInput = D_gunModTriggerInput;
+            this.D_gunModFireInput = D_gunModFireInput;
         }
 
         public void Execute()
@@ -21,10 +19,6 @@ namespace GunClasses
 
         protected abstract void HandleInput();
 
-        public Vector3 GetMousePosition()
-        {
-            return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        }
         protected bool GetKeyDown(KeyCode key)
         {
             return Input.GetKeyDown(key);
@@ -33,15 +27,9 @@ namespace GunClasses
         {
             return Input.GetKey(key);
         }
-
-        protected void SetLastTimeTriggered()
+        protected bool GetKeyUp(KeyCode key)
         {
-            _lastTimeTriggered = Time.time;
-        }
-
-        protected bool GetTimeSinceLastTriggerPassed(float timeBtwTriggeres)
-        {
-            return Time.time <= _lastTimeTriggered + timeBtwTriggeres;
+            return Input.GetKeyUp(key);
         }
     }
 }

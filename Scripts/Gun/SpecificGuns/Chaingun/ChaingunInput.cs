@@ -1,86 +1,52 @@
 using System;
-using UnityEngine;
 using GunClasses.DataClasses;
 
 namespace GunClasses.ChaingunClasses
 {
     public class ChaingunInput : GunInput   
     {
-        public event Action OnBaseModInput;
+        public event Action OnBaseModFireInputDown;
+        public event Action OnBaseModFireInputPressed;
 
-        public event Action OnSpawnShielModInput;
-        public event Action OnRemoveShieldModeInput;
+        public event Action OnShieldModEnableInputDown;
+        public event Action OnShieldModEnableInputPressed;
+        public event Action OnShieldModDisableInputUp;
 
-        private D_ChaingunBaseModInput D_baseModInput;
-        private D_ChaingunShieldModInput D_shieldModInput;
-
-        private float _attackTime;
-
-        private float _maxActiveTime;
-        private bool _shieldActivated;
-
-        public ChaingunInput(D_GunModTriggerInput D_gunModTriggerInput, D_ChaingunBaseModInput D_baseModInput, D_ChaingunShieldModInput D_shieldModInput) : base(D_gunModTriggerInput)
+        public ChaingunInput(D_GunModFireInput D_gunModFireInput) : base(D_gunModFireInput)
         {
-            this.D_baseModInput = D_baseModInput;
-            this.D_shieldModInput = D_shieldModInput;
-
-            _attackTime = D_baseModInput.AttackTime;
-
-            _maxActiveTime = D_shieldModInput.MaxActiveTime;
-            _shieldActivated = false;
         }
 
         protected override void HandleInput()
         {
-            HandleBaseModeTriggerInput();
-            HandleShieldModeTriggerInput();
+            HandleBaseModeInput();
+            HandleShieldModeInput();
         }
 
-        private void HandleBaseModeTriggerInput()
+        private void HandleBaseModeInput()
         {
-            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
+            if (GetKeyDown(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
             {
-                OnBaseModInput?.Invoke();
-                SetLastTimeTriggered();
+                OnBaseModFireInputDown?.Invoke();
             }
-
-            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
+            if (GetKey(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
             {
-                _attackTime -= Time.deltaTime;
-
-                if (_attackTime < 0)
-                {
-                    _attackTime = D_baseModInput.AttackTime;
-
-                    OnBaseModInput?.Invoke();
-                    SetLastTimeTriggered();
-                }
+                OnBaseModFireInputPressed?.Invoke();
             }
         }
 
-        private void HandleShieldModeTriggerInput()
+        private void HandleShieldModeInput()
         {
-            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && !_shieldActivated)
+            if (GetKeyDown(D_gunModFireInput.WeaponMod))
             {
-                _shieldActivated = true;
+                OnShieldModEnableInputDown?.Invoke();
             }
-
-            if (_shieldActivated)
+            if (GetKey(D_gunModFireInput.WeaponMod))
             {
-                _maxActiveTime -= Time.deltaTime;
-                OnSpawnShielModInput?.Invoke();
-
-                if (_maxActiveTime < 0)
-                {
-                    OnRemoveShieldModeInput?.Invoke();
-                    _shieldActivated = false;
-                    SetLastTimeTriggered();
-                }
+                OnShieldModEnableInputPressed?.Invoke();
             }
-
-            while(!_shieldActivated && _maxActiveTime < D_shieldModInput.MaxActiveTime)
+            if (GetKeyUp(D_gunModFireInput.WeaponMod))
             {
-                _maxActiveTime += Time.deltaTime;
+                OnShieldModDisableInputUp?.Invoke();
             }
         }
     }

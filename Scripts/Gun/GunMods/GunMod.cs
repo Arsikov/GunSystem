@@ -5,22 +5,26 @@ namespace GunClasses
 {
     public abstract class GunMod
     {
-        public event Action OnActivate;
-        public event Action OnTrigger;
+        private float _lastTimeTrigger;
 
-        public float LastTimeTrigger { get; set; }
-
-        public GunMod()
+        public virtual void Update()
         {
-            OnActivate += Activate;
-            OnTrigger += Trigger;
+
+        }
+        
+        public Vector3 GetMousePosition()
+        {
+            return Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        // update per frame
-        public abstract void Update();
+        protected bool GetTimeSinceLastFirePassed(float timeBtwTriggeres)
+        {
+            return Time.time <= _lastTimeTrigger + timeBtwTriggeres;
+        }
 
-        protected abstract void Activate();
-
-        protected abstract void Trigger();
+        protected void SetLastTimeFired()
+        {
+            _lastTimeTrigger = Time.time;
+        }
     }
 }

@@ -1,69 +1,60 @@
 using System;
-using UnityEngine;
-using GunClasses.DataClasses;
+using GunClasses.DataClasses; 
 
 namespace GunClasses.ShotgunClasses
 {
-    public class ShotgunShootInput : GunInput
+    public class ShotgunInput : GunInput
     {
-        public event Action OnBaseModeTriggerInput;
+        public event Action OnBaseModFireInputDown;
 
-        public event Action OnFullAutoModeEnableInput;
-        public event Action OnFullAutoModeTriggerInput;
-        public event Action OnFullAutoModeDisablenput;
+        public event Action OnFullAutoModEnableInputDown;
+        public event Action OnFullAutoModEnableInputPressed;
+        public event Action OnFullAutoModDisableInputUp;
 
-        private D_ShotgunBaseModInput D_baseModInput;
-        private D_ShotgunFullAutoModInput D_fullAutoModInput;
+        public event Action OnFullAutoModFireInputDown;
+        public event Action OnFullAutoModFireInputPressed;
 
-        private float _attackTime;
-
-        public ShotgunShootInput(D_GunModTriggerInput D_gunModTriggerInput, D_ShotgunBaseModInput D_baseModInput, D_ShotgunFullAutoModInput D_fullAutoModInput) : base(D_gunModTriggerInput)
+        public ShotgunInput(D_GunModFireInput D_gunModFireInput) : base(D_gunModFireInput)
         {
-            this.D_baseModInput = D_baseModInput;
-            this.D_fullAutoModInput = D_fullAutoModInput;
-
-            _attackTime = D_fullAutoModInput.AttackTime;
         }
 
         protected override void HandleInput()
         {
-            HandleBaseModeTriggerInput();
-            HandleFullAutoModeTriggerInput();
+            HandleBaseModeInput();
+            HandleFullAutoModeInput();
         }
 
-        private void HandleBaseModeTriggerInput()
+        private void HandleBaseModeInput()
         {
-            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
+            if (GetKeyDown(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
             {
-                OnBaseModeTriggerInput.Invoke();
-                SetLastTimeTriggered();
+                OnBaseModFireInputDown.Invoke();
             }
         }
 
-        private void HandleFullAutoModeTriggerInput()
+        private void HandleFullAutoModeInput()
         {
-            if (GetKey(D_gunModTriggerInput.SpecialModTriggerInput))
+            if (GetKeyDown(D_gunModFireInput.WeaponMod))
             {
-                OnFullAutoModeEnableInput?.Invoke();
-
-                if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
-                {
-                    OnFullAutoModeTriggerInput?.Invoke();
-                    SetLastTimeTriggered();
-                }
+                OnFullAutoModEnableInputDown?.Invoke();
+            }
+            if (GetKey(D_gunModFireInput.WeaponMod))
+            {
+                OnFullAutoModEnableInputPressed?.Invoke();
+            }
+            if (GetKeyUp(D_gunModFireInput.WeaponMod))
+            {
+                OnFullAutoModDisableInputUp?.Invoke();
             }
 
-            if (GetKeyDown(D_gunModTriggerInput.BaseModTriggerInput) && GetTimeSinceLastTriggerPassed(D_baseModInput.MinTimeBtwTriggers))
+
+            if (GetKeyDown(D_gunModFireInput.FireWeapon) && GetKey(D_gunModFireInput.WeaponMod))
             {
-                _attackTime -= Time.deltaTime;
-
-                if (_attackTime < 0)
-                {
-                    _attackTime = D_fullAutoModInput.AttackTime;
-
-                    OnFullAutoModeTriggerInput?.Invoke();
-                    SetLastTimeTriggered();
-                }
+                OnFullAutoModFireInputDown?.Invoke();
+            }
+            if (GetKey(D_gunModFireInput.FireWeapon) && GetKey(D_gunModFireInput.WeaponMod))
+            {
+                OnFullAutoModFireInputPressed?.Invoke();
             }
         }
     }   

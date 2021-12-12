@@ -7,7 +7,7 @@ namespace GunClasses.AmmoClasses
         public event Action<int> OnReduceAmmo;
         public event Action<int> OnAddAmmo;
 
-        public int AmmoAmount { get; protected set; }
+        public int AmmoAmount { get; private set; }
 
         protected GunAmmoContainer()
         {

@@ -19,11 +19,11 @@ namespace GunClasses.AmmoClasses
 
         private void RequestAmmoRedution()
         {
-            _ammoContainer.CallOnReduceAmmoEvent(D_gunMod.AmmoCostOnTrigger);
+            _ammoContainer.CallOnReduceAmmoEvent(D_gunMod.AmmoCost);
         }
         private void RequestAmmoAddition()
         {
-            _ammoContainer.CallOnAddAmmoEvent(D_gunMod.AmmoCostOnTrigger);
+            // refill somehow 
         }
     }
 }

@@ -1,22 +1,62 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using GunClasses.AmmoClasses;
 
 namespace GunClasses.ChaingunClasses
 {
-    public class ChaingunBaseMod : GunMod, IBaseMod
+    public class ChaingunBaseMod : GunMod
     {
-        public override void Update()
+        public event Action OnChaingunBaseModFire;
+
+        private ChaingunInput _chaingunInput;
+        private D_ChaingunBaseMod D_chaingunBaseMod;
+        private GunBulletAmmoContainer _bulletAmmoContainer;
+
+        private float _attackTime;
+
+        public ChaingunBaseMod(ChaingunInput chaingunInput, D_ChaingunBaseMod D_chaingunBaseMod, GunBulletAmmoContainer bulletAmmoContainer)
         {
-            throw new System.NotImplementedException();
+            _chaingunInput = chaingunInput;
+
+            this.D_chaingunBaseMod = D_chaingunBaseMod;
+
+            _bulletAmmoContainer = bulletAmmoContainer;
+            _attackTime = D_chaingunBaseMod.AttackTime;
+
+            chaingunInput.OnBaseModInputDown += OnInputDown;
+            chaingunInput.OnBaseModInputPressed += OnInputPressed;
+
+            OnChaingunBaseModFire += SetLastTimeFired;
+            OnChaingunBaseModFire += ReduceAmmo;
+            OnChaingunBaseModFire += SpawnProjectile;
         }
 
-        protected override void Activate()
+        private void OnInputDown()
         {
-            throw new System.NotImplementedException();
+            if (_bulletAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_chaingunBaseMod.MinTimeBtwFire))
+            {
+                OnChaingunBaseModFire?.Invoke();
+            }
+        }
+        private void OnInputPressed()
+        {
+            _attackTime -= Time.deltaTime;
+
+            if (_attackTime <= 0)
+            {
+                _attackTime = D_chaingunBaseMod.AttackTime;
+                OnChaingunBaseModFire?.Invoke();
+            }
         }
 
-        protected override void Trigger()
+        private void SpawnProjectile()
         {
-            throw new System.NotImplementedException();
+
+        }
+
+        private void ReduceAmmo()
+        {
+            _bulletAmmoContainer.CallOnReduceAmmoEvent(D_chaingunBaseMod.AmmoCost);
         }
     }
 }
