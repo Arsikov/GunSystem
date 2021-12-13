@@ -23,8 +23,8 @@ namespace GunClasses.ChaingunClasses
             _bulletAmmoContainer = bulletAmmoContainer;
             _attackTime = D_chaingunBaseMod.AttackTime;
 
-            chaingunInput.OnBaseModInputDown += OnInputDown;
-            chaingunInput.OnBaseModInputPressed += OnInputPressed;
+            chaingunInput.OnBaseModFireInputDown += OnInputDown;
+            chaingunInput.OnBaseModFireInputPressed += OnInputPressed;
 
             OnChaingunBaseModFire += SetLastTimeFired;
             OnChaingunBaseModFire += ReduceAmmo;

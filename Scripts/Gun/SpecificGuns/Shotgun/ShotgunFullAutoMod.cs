@@ -29,21 +29,22 @@ namespace GunClasses.ShotgunClasses
             _modIsActivated = false;
             _attackTime = D_shotgunFullAutoMod.AttackTime;
 
-            OnShotgunFullAutoModEnabled += OnFullAutoModEnabled;
-            OnShotgunFullAutoModDisabled += OnFullAutoModDisabled;
-
             shotgunInput.OnFullAutoModEnableInputDown += OnEnableInputDown;
             shotgunInput.OnFullAutoModEnableInputPressed += OnEnableInputPressed;
             shotgunInput.OnFullAutoModDisableInputUp += OnDisableInputUp;
 
             shotgunInput.OnFullAutoModFireInputDown += OnFireInputDown;
             shotgunInput.OnFullAutoModFireInputPressed += OnFireInputPressed;
-            
+
+            OnShotgunFullAutoModEnabled += OnFullAutoModEnabled;
+            OnShotgunFullAutoModDisabled += OnFullAutoModDisabled;
+
             OnShotgunFullAutoModFire += SetLastTimeFired;
             OnShotgunFullAutoModFire += ReduceAmmo;
             OnShotgunFullAutoModFire += SpawnProjectile;
         }
 
+        #region OnInput
         private void OnEnableInputDown()
         {
             OnShotgunFullAutoModEnabled?.Invoke();
@@ -77,7 +78,9 @@ namespace GunClasses.ShotgunClasses
                 OnShotgunFullAutoModFire?.Invoke();
             }
         }
+        #endregion
 
+        #region MethodsCalleddOnEvent
         private void OnFullAutoModEnabled()
         {
             _modIsActivated = true;
@@ -104,5 +107,6 @@ namespace GunClasses.ShotgunClasses
         {
             _shellAmmoContainer.CallOnReduceAmmoEvent(D_shotgunFullAutoMod.AmmoCost);
         }
+        #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace GunClasses.ShotgunClasses
 
             _shellAmmoContainer = shellAmmoContainer;
 
-            shotgunInput.OnBaseModInputDown += OnInputDown;
+            shotgunInput.OnBaseModFireInputDown += OnInputDown;
 
             OnShotgunBaseModFire += SetLastTimeFired;
             OnShotgunBaseModFire += SpawnProjectile;

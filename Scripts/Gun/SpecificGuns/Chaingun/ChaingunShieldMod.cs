@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using GunClasses.AmmoClasses;
-using System;
 
 namespace GunClasses.ChaingunClasses
 {
@@ -30,9 +30,9 @@ namespace GunClasses.ChaingunClasses
             _timeUnitToSpendAmmo = D_chaingunShieldMod.TimeUnitToSpendAmmo;
             _shieldActivated = false;
 
-            _chaingunInput.OnShieldModEnableInputPressed += OnInputDown;
-            _chaingunInput.OnShieldModEnableInputPressed += OnInputPresed;
-            _chaingunInput.OnShieldModDisableInputUp += OnInputUp;
+            chaingunInput.OnShieldModEnableInputDown += OnEnableInputDown;
+            chaingunInput.OnShieldModEnableInputPressed += OnEnableInputPressed;
+            chaingunInput.OnShieldModDisableInputUp += OnDisableInputUp;
 
             OnChaingunShieldModSpawn += SpawnShield;
 
@@ -50,7 +50,8 @@ namespace GunClasses.ChaingunClasses
             RechargeShield();
         }
 
-        private void OnInputDown()
+        #region OnInput
+        private void OnEnableInputDown()
         {
             if (_maxActiveTime >= D_chaingunShieldMod.MaxActivateTime)
             {
@@ -58,7 +59,7 @@ namespace GunClasses.ChaingunClasses
             }
         }
 
-        private void OnInputPresed()
+        private void OnEnableInputPressed()
         {
             if (!_shieldActivated)
             {
@@ -66,13 +67,14 @@ namespace GunClasses.ChaingunClasses
             }
         }
 
-        private void OnInputUp()
+        private void OnDisableInputUp()
         {
             if (_shieldActivated)
             {
                 OnChaingunShieldModRemove?.Invoke();
             }
         }
+        #endregion
 
         #region MethodsCalledOnEvent
         private void SpawnShield()

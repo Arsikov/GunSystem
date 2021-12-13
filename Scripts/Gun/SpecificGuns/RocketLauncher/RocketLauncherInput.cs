@@ -11,6 +11,9 @@ namespace GunClasses.RocketClasses
         public event Action OnBurstModEnableInputDown;
         public event Action OnBurstModChargeInputPressed;
         public event Action OnBurstModDisableInputUp;
+
+        public event Action OnBurstModFireInputDown;
+
         public RocketLauncherInput(D_GunModFireInput D_gunModFireInput) : base(D_gunModFireInput)
         {
         }
@@ -34,13 +37,17 @@ namespace GunClasses.RocketClasses
             {
                 OnBurstModEnableInputDown?.Invoke();
             }
-            if (GetKeyDown(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
+            if (GetKey(D_gunModFireInput.FireWeapon))
             {
                 OnBurstModChargeInputPressed?.Invoke();
             }
-            if (GetKeyDown(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
+            if (GetKeyUp(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
             {
                 OnBurstModDisableInputUp?.Invoke();
+            }
+            if (GetKeyDown(D_gunModFireInput.FireWeapon) && GetKey(D_gunModFireInput.FireWeapon))
+            {
+                OnBurstModFireInputDown?.Invoke();
             }
         }
     }
