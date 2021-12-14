@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using PlayerClasses.MovementClasses.InputClasses;
 using PlayerClasses.MovementClasses.StateClasses;
 
@@ -7,62 +6,59 @@ namespace PlayerClasses.MovementClasses
 {
     public class PlayerMovementService : MonoBehaviour
     {
-        [SerializeField] private KeyBindings keyBindings;
+        [SerializeField] private KeyBindings _keyBindings;
 
         [SerializeField] private D_PlayerDodgeState D_DodgeState;
         [SerializeField] private D_PlayerWalkState D_WalkState;
 
         #region Components
-        public Camera cam { private set; get; }
-        public PlayerRbController rbController { private set; get; }
+        public Camera CameraComponent { private set; get; }
+        public PlayerRbController RigidBodyController { private set; get; }
         #endregion
 
         #region Movement
-        public PlayerInputHandler inputHandler { get; private set; }
-        private PlayerStateSwitcher stateSwitcher;
+        public PlayerInputHandler InputHandler { get; private set; }
 
-        public PlayerDodgeState dodgeState;
-        public PlayerWalkState walkState;
-        public PlayerIdleState idleState;
+        private PlayerStateSwitcher _stateSwitcher;
+
+        public PlayerDodgeState _dodgeState;
+        public PlayerWalkState _walkState;
+        public PlayerIdleState _idleState;
         #endregion
 
         private void Awake()
         {
-            cam = Camera.main;
-            rbController = new PlayerRbController(GetComponent<Rigidbody2D>());
+            CameraComponent = Camera.main;
+            RigidBodyController = new PlayerRbController(GetComponent<Rigidbody2D>());
 
-            inputHandler = new PlayerInputHandler(keyBindings);
-            stateSwitcher = new PlayerStateSwitcher();
+            InputHandler = new PlayerInputHandler(_keyBindings);
+            _stateSwitcher = new PlayerStateSwitcher();
 
-            dodgeState = new PlayerDodgeState(this, stateSwitcher, rbController, inputHandler, D_DodgeState);
-            walkState = new PlayerWalkState(this, stateSwitcher, rbController, inputHandler, D_WalkState);
-            idleState = new PlayerIdleState(this, stateSwitcher, rbController, inputHandler);
+            _dodgeState = new PlayerDodgeState(this, _stateSwitcher, RigidBodyController, InputHandler, D_DodgeState);
+            _walkState = new PlayerWalkState(this, _stateSwitcher, RigidBodyController, InputHandler, D_WalkState);
+            _idleState = new PlayerIdleState(this, _stateSwitcher, RigidBodyController, InputHandler);
 
-            stateSwitcher.Initialize(idleState);
-        }
-
-        private void Start()
-        {
+            _stateSwitcher.Initialize(_idleState);
         }
 
         private void Update()
         {
-            inputHandler.HandleInput();
-            stateSwitcher.currentState.Update();
+            InputHandler.HandleInput();
+            _stateSwitcher.currentState.Update();
         }
 
         private void FixedUpdate()
         {
             RotatePlayerToMouse();
-            stateSwitcher.currentState.FixedUpdate();
+            _stateSwitcher.currentState.FixedUpdate();
         }
-        #region SideMethod
+
+
         private void RotatePlayerToMouse()
         {
-            Vector2 lookDir = inputHandler.MousePosition - rbController.rb.position;
+            Vector2 lookDir = InputHandler.MousePosition - RigidBodyController.rb.position;
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-            rbController.SetRotation(angle);
+            RigidBodyController.SetRotation(angle);
         }
-        #endregion
     }
 }

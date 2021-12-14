@@ -1,11 +1,10 @@
-﻿using GunClasses.DataClasses;
-using System;
+﻿using System;
+using GunClasses.DataClasses;
 
 namespace GunClasses.RocketClasses
 {
     public class RocketLauncherInput : GunInput
     {
-
         public event Action OnBaseModFireInputDown;
 
         public event Action OnBurstModEnableInputDown;

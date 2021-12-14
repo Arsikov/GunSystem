@@ -22,7 +22,7 @@ namespace PlayerClasses.MovementClasses.StateClasses
 
             if (inputHandler.WalkDirection != Vector2.zero)
             {
-                SwitchState(playerMovementService.walkState);
+                SwitchState(playerMovementService._walkState);
             }
         }
     }

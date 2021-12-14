@@ -17,14 +17,14 @@ namespace PlayerClasses.GunClasses
 
         #region GunPrefabs
         [Header("Gun Prefabs")]
-        [SerializeField] private Chaingun Chaingun;
-        [SerializeField] private Cannon Cannon;
+        [SerializeField] private Chaingun _chaingun;
+        [SerializeField] private Cannon _cannon;
 
-        [SerializeField] private Ballista Ballista;
-        [SerializeField] private PlasmaRiffle PlasmaRiffle;
+        [SerializeField] private Ballista _ballista;
+        [SerializeField] private PlasmaRifle _plasmaRifle;
 
-        [SerializeField] private RocketLauncher RocketLauncher;
-        [SerializeField] private Shotgun Shotgun;
+        [SerializeField] private RocketLauncher _rocketLauncher;
+        [SerializeField] private Shotgun _shotgun;
         #endregion
 
         public Transform GunPoint { get; private set; }
@@ -33,12 +33,18 @@ namespace PlayerClasses.GunClasses
 
         public void Awake()
         {
-            Swapper = new PlayerGunSwap(new Gun[] { Chaingun, Cannon, Ballista, PlasmaRiffle, RocketLauncher, Shotgun }, _swapKeyBindings);
+            InitializeGuns();
+            Swapper = new PlayerGunSwap(new Gun[] { _chaingun, _cannon, _ballista, _plasmaRifle, _rocketLauncher, _shotgun }, _swapKeyBindings);
         }
 
         public void Update()
         {
             Swapper.HandleSwapInput();
+        }
+
+        private void InitializeGuns()
+        {
+
         }
     }
 }

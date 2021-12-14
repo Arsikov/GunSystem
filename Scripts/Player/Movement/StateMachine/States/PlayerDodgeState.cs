@@ -38,11 +38,11 @@ namespace PlayerClasses.MovementClasses.StateClasses
             {
                 if(inputHandler.WalkDirection != Vector2.zero)
                 {
-                    SwitchState(playerMovementService.walkState);
+                    SwitchState(playerMovementService._walkState);
                 }
                 else
                 {
-                    SwitchState(playerMovementService.idleState);
+                    SwitchState(playerMovementService._idleState);
                 }
             }
         }

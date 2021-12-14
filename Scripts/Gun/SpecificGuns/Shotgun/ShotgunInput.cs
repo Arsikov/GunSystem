@@ -20,11 +20,11 @@ namespace GunClasses.ShotgunClasses
 
         protected override void HandleInput()
         {
-            HandleBaseModeInput();
-            HandleFullAutoModeInput();
+            HandleBaseModInput();
+            HandleFullAutoModInput();
         }
 
-        private void HandleBaseModeInput()
+        private void HandleBaseModInput()
         {
             if (GetKeyDown(D_gunModFireInput.FireWeapon) && !GetKey(D_gunModFireInput.WeaponMod))
             {
@@ -32,7 +32,7 @@ namespace GunClasses.ShotgunClasses
             }
         }
 
-        private void HandleFullAutoModeInput()
+        private void HandleFullAutoModInput()
         {
             if (GetKeyDown(D_gunModFireInput.WeaponMod))
             {

@@ -9,7 +9,7 @@ namespace GunClasses.RocketClasses
         public event Action OnRocketLauncherBurstModFire;
 
         public event Action OnRocketLauncherBurstModEnabled;
-        public event Action OnRocketLauncherBurstModIsActivated;
+        public event Action OnRocketLauncherBurstModIsCharging;
         public event Action OnRocketLauncherBurstModDisabled;
 
         private RocketLauncherInput _rocketLauncherInput;
@@ -18,6 +18,7 @@ namespace GunClasses.RocketClasses
 
         private bool _modIsActivated;
         private float _chargeExtent;
+        private bool _burstIsFullyCharged;
 
         public RocketLauncherBurstMod(RocketLauncherInput rocketLauncherInput, D_RocketLauncherBurstMod D_rocketLauncherBurstMod, GunShellAmmoContainer shellAmmoContainer)
         {
@@ -37,7 +38,7 @@ namespace GunClasses.RocketClasses
             rocketLauncherInput.OnBurstModFireInputDown += OnFireInputDown;
 
             OnRocketLauncherBurstModEnabled += OnBurstModEnabled;
-            OnRocketLauncherBurstModIsActivated += OnBurstModCharging;
+            OnRocketLauncherBurstModIsCharging += OnBurstModCharging;
             OnRocketLauncherBurstModDisabled += OnBurstModDisabled;
 
             OnRocketLauncherBurstModFire += SetLastTimeFired;
@@ -55,7 +56,7 @@ namespace GunClasses.RocketClasses
         }
         private void OnChargeInputPressed()
         {
-            OnRocketLauncherBurstModIsActivated?.Invoke();
+            OnRocketLauncherBurstModIsCharging?.Invoke();
         }
         private void OnDisableInputUp()
         {
@@ -66,7 +67,7 @@ namespace GunClasses.RocketClasses
         }
         private void OnFireInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_rocketLauncherBurstMod.MinTimeBtwFire))
+            if (_shellAmmoContainer.AmmoAmount > D_rocketLauncherBurstMod.AmmoCost && _burstIsFullyCharged)
             {
                 OnRocketLauncherBurstModFire?.Invoke();
             }
@@ -80,15 +81,24 @@ namespace GunClasses.RocketClasses
         }
         private void OnBurstModCharging()
         {
+            _chargeExtent += Time.deltaTime;
 
+            if(_chargeExtent >= D_rocketLauncherBurstMod.ChargeTime)
+            {
+                _burstIsFullyCharged = true;
+            }
         }
         private void OnBurstModDisabled()
         {
             _modIsActivated = false;
+            _burstIsFullyCharged = false;
         }
         private void SpawnProjectile()
         {
+            if (_burstIsFullyCharged)
+            {
 
+            }
         }
         private void ReduceAmmo()
         {

@@ -26,6 +26,7 @@ namespace GunClasses.ChaingunClasses
             this.D_chaingunShieldMod = D_chaingunShieldMod;
 
             _bulletAmmoContainer = bulletAmmoContainer;
+
             _maxActiveTime = D_chaingunShieldMod.MaxActivateTime;
             _timeUnitToSpendAmmo = D_chaingunShieldMod.TimeUnitToSpendAmmo;
             _shieldActivated = false;

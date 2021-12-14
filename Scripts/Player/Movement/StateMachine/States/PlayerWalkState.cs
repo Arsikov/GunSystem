@@ -18,11 +18,11 @@ namespace PlayerClasses.MovementClasses.StateClasses
 
             if (inputHandler.WalkDirection == Vector2.zero)
             {
-                SwitchState(playerMovementService.idleState);
+                SwitchState(playerMovementService._idleState);
             }
-            if (inputHandler.DodgeInput && playerMovementService.dodgeState.AbleToDodge())
+            if (inputHandler.DodgeInput && playerMovementService._dodgeState.AbleToDodge())
             {
-                SwitchState(playerMovementService.dodgeState);
+                SwitchState(playerMovementService._dodgeState);
             }
         }
 

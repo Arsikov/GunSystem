@@ -62,7 +62,7 @@ namespace GunClasses.ShotgunClasses
 
         private void OnFireInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
+            if (_shellAmmoContainer.AmmoAmount > D_shotgunFullAutoMod.AmmoCost && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
             {
                 OnShotgunFullAutoModFire?.Invoke();
             }
