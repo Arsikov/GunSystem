@@ -4,8 +4,10 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.CannonClasses
 {
-    public class CannonFlameBlastMod : GunMod
+    public class CannonFlameBlastMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnCannonFlameBlastModFire;
 
         public event Action OnCannonFlameBlastModEnabled;
@@ -14,7 +16,8 @@ namespace GunClasses.CannonClasses
 
         private CannonInput _cannonInput;
         private D_CannonFlameBlastMod D_cannonFlameBlastMod;
-        private GunBulletAmmoContainer _bulletAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private bool _modIsActivated;
         private float _chargeExtent;
@@ -42,7 +45,7 @@ namespace GunClasses.CannonClasses
             OnCannonFlameBlastModDisabled += OnBurstModDisabled;
 
             OnCannonFlameBlastModFire += SetLastTimeFired;
-            OnCannonFlameBlastModFire += ReduceAmmo;
+            OnCannonFlameBlastModFire += RequestAmmo;
             OnCannonFlameBlastModFire += SpawnProjectile;
         }
 
@@ -67,7 +70,7 @@ namespace GunClasses.CannonClasses
         }
         private void OnFireInputDown()
         {
-            if (_bulletAmmoContainer.AmmoAmount > D_cannonFlameBlastMod.AmmoCost && _blastIsFullyCharged)
+            if (_ammoRequest.GetAmmoValue() > D_cannonFlameBlastMod.AmmoCost && _blastIsFullyCharged)
             {
                 OnCannonFlameBlastModFire?.Invoke();
             }
@@ -100,9 +103,9 @@ namespace GunClasses.CannonClasses
 
             }
         }
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnReduceAmmoEvent(D_cannonFlameBlastMod.AmmoCost);
+            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_cannonFlameBlastMod.AmmoCost);
         }
         #endregion
     }

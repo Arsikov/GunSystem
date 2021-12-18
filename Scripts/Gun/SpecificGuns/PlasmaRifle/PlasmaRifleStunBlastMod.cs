@@ -6,6 +6,8 @@ namespace GunClasses.PlasmaClasses
 {
     public class PlasmaRifleStunBlastMod : GunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnPlasmaRifleStunBlastModFire;
 
         private PlasmaRifleInput _plasmaRifleInput;

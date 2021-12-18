@@ -7,12 +7,12 @@ namespace GunClasses.ShotgunClasses
     {
         public event Action OnBaseModFireInputDown;
 
+        public event Action OnFullAutoModFireInputDown;
+        public event Action OnFullAutoModFireInputPressed;
+
         public event Action OnFullAutoModEnableInputDown;
         public event Action OnFullAutoModEnableInputPressed;
         public event Action OnFullAutoModDisableInputUp;
-
-        public event Action OnFullAutoModFireInputDown;
-        public event Action OnFullAutoModFireInputPressed;
 
         public ShotgunInput(D_GunModFireInput D_gunModFireInput) : base(D_gunModFireInput)
         {

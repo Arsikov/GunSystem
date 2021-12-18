@@ -4,8 +4,10 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.RocketClasses
 {
-    public class RocketLauncherBurstMod : GunMod
+    public class RocketLauncherBurstMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnRocketLauncherBurstModFire;
 
         public event Action OnRocketLauncherBurstModEnabled;
@@ -14,7 +16,8 @@ namespace GunClasses.RocketClasses
 
         private RocketLauncherInput _rocketLauncherInput;
         private D_RocketLauncherBurstMod D_rocketLauncherBurstMod;
-        private GunShellAmmoContainer _shellAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private bool _modIsActivated;
         private float _chargeExtent;
@@ -42,7 +45,7 @@ namespace GunClasses.RocketClasses
             OnRocketLauncherBurstModDisabled += OnBurstModDisabled;
 
             OnRocketLauncherBurstModFire += SetLastTimeFired;
-            OnRocketLauncherBurstModFire += ReduceAmmo;
+            OnRocketLauncherBurstModFire += RequestAmmo;
             OnRocketLauncherBurstModFire += SpawnProjectile;
         }
 
@@ -67,7 +70,7 @@ namespace GunClasses.RocketClasses
         }
         private void OnFireInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > D_rocketLauncherBurstMod.AmmoCost && _burstIsFullyCharged)
+            if (_ammoRequest.GetAmmoValue() > D_rocketLauncherBurstMod.AmmoCost && _burstIsFullyCharged)
             {
                 OnRocketLauncherBurstModFire?.Invoke();
             }
@@ -100,9 +103,9 @@ namespace GunClasses.RocketClasses
 
             }
         }
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnReduceAmmoEvent(D_rocketLauncherBurstMod.AmmoCost);
+            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_rocketLauncherBurstMod.AmmoCost);
         }
         #endregion
     }

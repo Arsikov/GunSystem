@@ -4,13 +4,16 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.CannonClasses
 {
-    public class CannonBaseMod : GunMod
+    public class CannonBaseMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnCannonBaseModFire;
 
         private CannonInput _cannonInput;
         private D_CannonBaseMod D_cannonBaseMod;
-        private GunBulletAmmoContainer _bulletAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         public CannonBaseMod(CannonInput cannonInput, D_CannonBaseMod D_cannonBaseMod, GunBulletAmmoContainer bulletAmmoContainer)
         {
@@ -23,13 +26,13 @@ namespace GunClasses.CannonClasses
             cannonInput.OnBaseModFireInputDown += OnInputDown;
 
             OnCannonBaseModFire += SetLastTimeFired;
-            OnCannonBaseModFire += ReduceAmmo;
+            OnCannonBaseModFire += RequestAmmo;
             OnCannonBaseModFire += SpawnProjectile;
         }
 
         private void OnInputDown()
         {
-            if (_bulletAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_cannonBaseMod.MinTimeBtwFire))
+            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_cannonBaseMod.MinTimeBtwFire))
             {
                 OnCannonBaseModFire?.Invoke();
             }
@@ -40,9 +43,9 @@ namespace GunClasses.CannonClasses
 
         }
 
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnReduceAmmoEvent(D_cannonBaseMod.AmmoCost);
+            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_cannonBaseMod.AmmoCost);
         }
     }
 }

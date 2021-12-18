@@ -6,5 +6,6 @@ namespace GunClasses.BallistaClasses
     {
         public float MaxChargeStepExtent;
         public int MaxChargeStepAmount;
+        public int ChrageStepAmmoMultiplier;
     }
 }

@@ -7,11 +7,11 @@ namespace GunClasses.RocketClasses
     {
         public event Action OnBaseModFireInputDown;
 
+        public event Action OnBurstModFireInputDown;
+
         public event Action OnBurstModEnableInputDown;
         public event Action OnBurstModChargeInputPressed;
         public event Action OnBurstModDisableInputUp;
-
-        public event Action OnBurstModFireInputDown;
 
         public RocketLauncherInput(D_GunModFireInput D_gunModFireInput) : base(D_gunModFireInput)
         {

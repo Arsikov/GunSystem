@@ -4,13 +4,16 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.BallistaClasses
 {
-    public class BallistaBaseMod : GunMod
+    public class BallistaBaseMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnBallistaBaseModFire;
 
         private BallistaInput _ballistaInput;
         private D_BallistaBaseMod D_ballistaBaseMod;
-        private GunEnergyAmmoContainer _energyAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         public BallistaBaseMod(BallistaInput ballistaInput, D_BallistaBaseMod D_ballistaBaseMod, GunEnergyAmmoContainer energyAmmoContainer)
         {
@@ -18,18 +21,18 @@ namespace GunClasses.BallistaClasses
 
             this.D_ballistaBaseMod = D_ballistaBaseMod;
 
-            _energyAmmoContainer = energyAmmoContainer;
+            _ammoRequest = new GunAmmoRequest(energyAmmoContainer, AmmoRequest);
 
             ballistaInput.OnBaseModFireInputDown += OnInputDown;
 
             OnBallistaBaseModFire += SetLastTimeFired;
-            OnBallistaBaseModFire += ReduceAmmo;
+            OnBallistaBaseModFire += RequestAmmo;
             OnBallistaBaseModFire += SpawnProjectile;
         }
 
         private void OnInputDown()
         {
-            if (_energyAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_ballistaBaseMod.MinTimeBtwFire))
+            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_ballistaBaseMod.MinTimeBtwFire))
             {
                 OnBallistaBaseModFire?.Invoke();
             }
@@ -40,9 +43,9 @@ namespace GunClasses.BallistaClasses
 
         }
 
-        private void ReduceAmmo()
+        public void RequestAmmo()
         { 
-            _energyAmmoContainer.CallOnReduceAmmoEvent(D_ballistaBaseMod.AmmoCost);
+            _energyAmmoContainer.CallOnModifyAmmoEvent(-D_ballistaBaseMod.AmmoCost);
         }
     }
 }

@@ -4,15 +4,18 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.ChaingunClasses
 {
-    public class ChaingunShieldMode : GunMod
+    public class ChaingunShieldMode : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnChaingunShieldModSpawn;
         public event Action OnChaingunShieldModIsActivated;
         public event Action OnChaingunShieldModRemove;
 
         private ChaingunInput _chaingunInput;
         private D_ChaingunShieldMod D_chaingunShieldMod;
-        private GunBulletAmmoContainer _bulletAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private GameObject _shieldPrefab;
         private float _maxActiveTime;
@@ -106,9 +109,9 @@ namespace GunClasses.ChaingunClasses
             if (_timeUnitToSpendAmmo < 0)
             {
                 _timeUnitToSpendAmmo = D_chaingunShieldMod.TimeUnitToSpendAmmo;
-                if (_bulletAmmoContainer.AmmoAmount >= D_chaingunShieldMod.AmmoCost)
+                if (_ammoRequest.GetAmmoValue() >= D_chaingunShieldMod.AmmoCost)
                 {
-                    _bulletAmmoContainer.CallOnReduceAmmoEvent(D_chaingunShieldMod.AmmoCost);
+                    _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_chaingunShieldMod.AmmoCost);
                 }
                 else
                 {
@@ -123,7 +126,7 @@ namespace GunClasses.ChaingunClasses
             _shieldActivated = false;
         }
         #endregion
-        
+
         private void RechargeShield()
         {
             if (!_shieldActivated && _maxActiveTime<D_chaingunShieldMod.MaxActivateTime)

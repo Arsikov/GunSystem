@@ -4,8 +4,10 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.BallistaClasses
 {
-    public class BallistaBladeMod : GunMod
+    public class BallistaBladeMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnBallistaBladeModFire;
 
         public event Action OnBallistaBladeModModEnabled;
@@ -14,7 +16,8 @@ namespace GunClasses.BallistaClasses
 
         private BallistaInput _ballistaInput;
         private D_BallistaBladeMod D_ballistaBladeMod;
-        private GunEnergyAmmoContainer _energyAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private bool _modIsActivated;
         private bool _modFullyCharged;
@@ -45,7 +48,7 @@ namespace GunClasses.BallistaClasses
             OnBallistaBladeModDisabled += OnBurstModDisabled;
 
             OnBallistaBladeModFire += SetLastTimeFired;
-            OnBallistaBladeModFire += ReduceAmmo;
+            OnBallistaBladeModFire += RequestAmmo;
             OnBallistaBladeModFire += SpawnProjectile;
         }
 
@@ -105,9 +108,9 @@ namespace GunClasses.BallistaClasses
             _currentStepChargeExtent = 0;
             _currentStep = 0;
         }
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _energyAmmoContainer.CallOnReduceAmmoEvent(D_ballistaBladeMod.AmmoCost);
+            _energyAmmoContainer.CallOnModifyAmmoEvent(-D_ballistaBladeMod.AmmoCost * D_ballistaBladeMod.ChrageStepAmmoMultiplier);
         }
         #endregion
     }

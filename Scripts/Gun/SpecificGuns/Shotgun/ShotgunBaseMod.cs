@@ -4,32 +4,33 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.ShotgunClasses
 {
-    public class ShotgunBaseMode : GunMod
+    public class ShotgunBaseMode : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
         public event Action OnShotgunBaseModFire;
 
-        private ShotgunInput _shotgunInput;
         private D_ShotgunBaseMod D_shotgunBaseMod;
-        private GunShellAmmoContainer _shellAmmoContainer;
+
+        public GunAmmoRequest AmmoRequestSender { get; set; }
+
 
         public ShotgunBaseMode(ShotgunInput shotgunInput, D_ShotgunBaseMod D_shotgunBaseMod, GunShellAmmoContainer shellAmmoContainer)
         {
-            _shotgunInput = shotgunInput;
-
             this.D_shotgunBaseMod = D_shotgunBaseMod;
 
-            _shellAmmoContainer = shellAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(shellAmmoContainer, AmmoRequest);
 
             shotgunInput.OnBaseModFireInputDown += OnInputDown;
 
             OnShotgunBaseModFire += SetLastTimeFired;
             OnShotgunBaseModFire += SpawnProjectile;
-            OnShotgunBaseModFire += ReduceAmmo;
+            OnShotgunBaseModFire += RequestAmmo;
         }
+
 
         private void OnInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_shotgunBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_shotgunBaseMod.MinTimeBtwFire))
             {
                 OnShotgunBaseModFire?.Invoke();
             }
@@ -40,9 +41,9 @@ namespace GunClasses.ShotgunClasses
 
         }
 
-        private void ReduceAmmo()
+        protected void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnReduceAmmoEvent(D_shotgunBaseMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_shotgunBaseMod.AmmoCost);
         }
     }
 }

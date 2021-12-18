@@ -36,7 +36,7 @@ namespace PlayerClasses.GunClasses
             InitializeGuns();
             Swapper = new PlayerGunSwap(new Gun[] { _chaingun, _cannon, _ballista, _plasmaRifle, _rocketLauncher, _shotgun }, _swapKeyBindings);
         }
-
+        
         public void Update()
         {
             Swapper.HandleSwapInput();

@@ -4,15 +4,13 @@ namespace GunClasses.AmmoClasses
 {
     public abstract class GunAmmoContainer
     {
-        public event Action<int> OnReduceAmmo;
-        public event Action<int> OnAddAmmo;
+        public event Action<int> OnModifyAmmo;
 
         public int AmmoAmount { get; private set; }
 
         protected GunAmmoContainer()
         {
-            OnReduceAmmo += ReduceAmmo;
-            OnAddAmmo += OnAddAmmo;
+            OnModifyAmmo += CallOnModifyAmmoEvent;
         }
 
         protected void ReduceAmmo(int reduction)
@@ -25,13 +23,9 @@ namespace GunClasses.AmmoClasses
             AmmoAmount += addition;
         }
 
-        public void CallOnReduceAmmoEvent(int reduction)
+        public void CallOnModifyAmmoEvent(int reduction)
         {
-            OnReduceAmmo?.Invoke(reduction);
-        }
-        public void CallOnAddAmmoEvent(int addition)
-        {
-            OnReduceAmmo?.Invoke(addition);
+            OnModifyAmmo?.Invoke(reduction);
         }
     }
 }

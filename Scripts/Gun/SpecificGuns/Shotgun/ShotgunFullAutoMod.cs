@@ -4,8 +4,10 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.ShotgunClasses
 {
-    public class ShotgunFullAutoMode : GunMod
+    public class ShotgunFullAutoMode : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnShotgunFullAutoModFire;
 
         public event Action OnShotgunFullAutoModEnabled;
@@ -14,7 +16,8 @@ namespace GunClasses.ShotgunClasses
 
         private ShotgunInput _shotgunInput;
         private D_ShotgunFullAutoMod D_shotgunFullAutoMod;
-        private GunShellAmmoContainer _shellAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private bool _modIsActivated;
         private float _attackTime;
@@ -40,7 +43,7 @@ namespace GunClasses.ShotgunClasses
             OnShotgunFullAutoModDisabled += OnFullAutoModDisabled;
 
             OnShotgunFullAutoModFire += SetLastTimeFired;
-            OnShotgunFullAutoModFire += ReduceAmmo;
+            OnShotgunFullAutoModFire += RequestAmmo;
             OnShotgunFullAutoModFire += SpawnProjectile;
         }
 
@@ -62,7 +65,7 @@ namespace GunClasses.ShotgunClasses
 
         private void OnFireInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > D_shotgunFullAutoMod.AmmoCost && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
+            if (_ammoRequest.GetAmmoValue() > D_shotgunFullAutoMod.AmmoCost && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
             {
                 OnShotgunFullAutoModFire?.Invoke();
             }
@@ -103,9 +106,9 @@ namespace GunClasses.ShotgunClasses
 
         }
 
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnReduceAmmoEvent(D_shotgunFullAutoMod.AmmoCost);
+            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_shotgunFullAutoMod.AmmoCost);
         }
         #endregion
     }

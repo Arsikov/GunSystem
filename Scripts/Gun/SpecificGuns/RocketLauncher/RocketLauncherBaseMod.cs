@@ -3,13 +3,16 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.RocketClasses
 {
-    public class RocketLauncherBaseMod : GunMod
+    public class RocketLauncherBaseMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnShotgunBaseModFire;
 
         private RocketLauncherInput _rocketLauncherInput;
         private D_RocketLauncherBaseMod D_rocketLauncherBaseMod;
-        private GunShellAmmoContainer _shellAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         public RocketLauncherBaseMod(RocketLauncherInput rocketLauncherInput, D_RocketLauncherBaseMod D_rocketLauncherBaseMod, GunShellAmmoContainer shellAmmoContainer)
         {
@@ -23,12 +26,12 @@ namespace GunClasses.RocketClasses
 
             OnShotgunBaseModFire += SetLastTimeFired;
             OnShotgunBaseModFire += SpawnProjectile;
-            OnShotgunBaseModFire += ReduceAmmo;
+            OnShotgunBaseModFire += RequestAmmo;
         }
 
         private void OnInputDown()
         {
-            if (_shellAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_rocketLauncherBaseMod.MinTimeBtwFire))
+            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_rocketLauncherBaseMod.MinTimeBtwFire))
             {
                 OnShotgunBaseModFire?.Invoke();
             }
@@ -39,9 +42,9 @@ namespace GunClasses.RocketClasses
 
         }
 
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnReduceAmmoEvent(D_rocketLauncherBaseMod.AmmoCost);
+            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_rocketLauncherBaseMod.AmmoCost);
         }
     }
 }

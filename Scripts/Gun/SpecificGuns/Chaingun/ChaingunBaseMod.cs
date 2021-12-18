@@ -4,13 +4,16 @@ using GunClasses.AmmoClasses;
 
 namespace GunClasses.ChaingunClasses
 {
-    public class ChaingunBaseMod : GunMod
+    public class ChaingunBaseMod : GunMod, IAmmoRequiredGunMod
     {
+        public event Action<int> AmmoRequest;
+
         public event Action OnChaingunBaseModFire;
 
         private ChaingunInput _chaingunInput;
         private D_ChaingunBaseMod D_chaingunBaseMod;
-        private GunBulletAmmoContainer _bulletAmmoContainer;
+
+        protected GunAmmoRequest _ammoRequest;
 
         private float _attackTime;
 
@@ -27,7 +30,7 @@ namespace GunClasses.ChaingunClasses
             chaingunInput.OnBaseModFireInputPressed += OnInputPressed;
 
             OnChaingunBaseModFire += SetLastTimeFired;
-            OnChaingunBaseModFire += ReduceAmmo;
+            OnChaingunBaseModFire += RequestAmmo;
             OnChaingunBaseModFire += SpawnProjectile;
         }
 
@@ -54,9 +57,9 @@ namespace GunClasses.ChaingunClasses
 
         }
 
-        private void ReduceAmmo()
+        public void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnReduceAmmoEvent(D_chaingunBaseMod.AmmoCost);
+            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_chaingunBaseMod.AmmoCost);
         }
     }
 }
