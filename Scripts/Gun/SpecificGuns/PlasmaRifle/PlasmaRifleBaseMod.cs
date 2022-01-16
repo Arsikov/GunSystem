@@ -13,7 +13,7 @@ namespace GunClasses.PlasmaClasses
         private PlasmaRifleInput _plasmaRifleInput;
         private D_PlasmaRifleBaseMod D_plasmaRifleBaseMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public ResourceRequest AmmoRequestSender { get; private set; }
 
         private float _attackTime;
 
@@ -23,24 +23,27 @@ namespace GunClasses.PlasmaClasses
 
             this.D_plasmaRifleBaseMod = D_plasmaRifleBaseMod;
 
-            _energyAmmoContainer = energyAmmoContainer;
+            AmmoRequestSender = new ResourceRequest(energyAmmoContainer, AmmoRequest);
             _attackTime = D_plasmaRifleBaseMod.AttackTime;
 
+            #region Events
             plasmaRifleInput.OnBaseModFireInputDown += OnInputDown;
             plasmaRifleInput.OnBaseModFireInputPressed += OnInputPressed;
 
             OnPlasmaRifleBaseModFire += SetLastTimeFired;
             OnPlasmaRifleBaseModFire += RequestAmmo;
             OnPlasmaRifleBaseModFire += SpawnProjectile;
+            #endregion
         }
 
         private void OnInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_plasmaRifleBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > 0 && GetTimeSinceLastFirePassed(D_plasmaRifleBaseMod.MinTimeBtwFire))
             {
                 OnPlasmaRifleBaseModFire?.Invoke();
             }
         }
+
         private void OnInputPressed()
         {
             _attackTime -= Time.deltaTime;
@@ -57,9 +60,9 @@ namespace GunClasses.PlasmaClasses
 
         }
 
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _energyAmmoContainer.CallOnModifyAmmoEvent(-D_plasmaRifleBaseMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_plasmaRifleBaseMod.AmmoCost);
         }
     }
 }

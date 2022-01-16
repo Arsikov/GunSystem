@@ -17,7 +17,7 @@ namespace GunClasses.ShotgunClasses
         private ShotgunInput _shotgunInput;
         private D_ShotgunFullAutoMod D_shotgunFullAutoMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         private bool _modIsActivated;
         private float _attackTime;
@@ -25,13 +25,14 @@ namespace GunClasses.ShotgunClasses
         public ShotgunFullAutoMode(ShotgunInput shotgunInput, D_ShotgunFullAutoMod D_shotgunFullAutoMod, GunShellAmmoContainer shellAmmoContainer)
         {
             _shotgunInput = shotgunInput;
+            AmmoRequestSender = new GunAmmoRequest(shellAmmoContainer, AmmoRequest);
 
             this.D_shotgunFullAutoMod = D_shotgunFullAutoMod;
 
-            _shellAmmoContainer = shellAmmoContainer;
             _modIsActivated = false;
             _attackTime = D_shotgunFullAutoMod.AttackTime;
 
+            #region Events
             shotgunInput.OnFullAutoModEnableInputDown += OnEnableInputDown;
             shotgunInput.OnFullAutoModEnableInputPressed += OnEnableInputPressed;
             shotgunInput.OnFullAutoModDisableInputUp += OnDisableInputUp;
@@ -45,6 +46,7 @@ namespace GunClasses.ShotgunClasses
             OnShotgunFullAutoModFire += SetLastTimeFired;
             OnShotgunFullAutoModFire += RequestAmmo;
             OnShotgunFullAutoModFire += SpawnProjectile;
+            #endregion
         }
 
         #region OnInput
@@ -65,7 +67,7 @@ namespace GunClasses.ShotgunClasses
 
         private void OnFireInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > D_shotgunFullAutoMod.AmmoCost && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > D_shotgunFullAutoMod.AmmoCost && GetTimeSinceLastFirePassed(D_shotgunFullAutoMod.MinTimeBtwFire))
             {
                 OnShotgunFullAutoModFire?.Invoke();
             }
@@ -83,7 +85,7 @@ namespace GunClasses.ShotgunClasses
         }
         #endregion
 
-        #region MethodsCalleddOnEvent
+        #region OnEvent
         private void OnFullAutoModEnabled()
         {
             _modIsActivated = true;
@@ -106,9 +108,9 @@ namespace GunClasses.ShotgunClasses
 
         }
 
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_shotgunFullAutoMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_shotgunFullAutoMod.AmmoCost);
         }
         #endregion
     }

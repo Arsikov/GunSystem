@@ -2,14 +2,16 @@
 
 namespace GunClasses.Abilities
 {
-    public class TragetPush : GunAbility
+    public class TragetPush : IGunAbility
     {
+        public event Action EventToListenTo;
+
         public TragetPush()
         {
 
         }
 
-        protected override void Execute()
+        protected void Execute()
         {
 
         }

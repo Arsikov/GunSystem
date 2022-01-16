@@ -1,4 +1,5 @@
 using UnityEngine;
+using ResourceClasses;
 
 public class Projectile : MonoBehaviour
 {
@@ -31,12 +32,13 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetComponent<IHealth>() != null)
+        if(collision.GetComponent<Resource>() != null)
         {
-            AttackDetails details = new AttackDetails(Damage, EnemyPushVel * MoveDir);
-            collision.GetComponent<IHealth>().GetDamage(details);
+            //AttackDetails details = new AttackDetails(Damage, EnemyPushVel * MoveDir);
+            //collision.GetComponent<Resource>().ModifyValue(details);
             Destroy(gameObject);
         }
+
         if(collision.gameObject.tag == "Wall")
         {
             Destroy(gameObject);

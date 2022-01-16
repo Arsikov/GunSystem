@@ -15,7 +15,7 @@ namespace GunClasses.ChaingunClasses
         private ChaingunInput _chaingunInput;
         private D_ChaingunShieldMod D_chaingunShieldMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         private GameObject _shieldPrefab;
         private float _maxActiveTime;
@@ -28,12 +28,13 @@ namespace GunClasses.ChaingunClasses
 
             this.D_chaingunShieldMod = D_chaingunShieldMod;
 
-            _bulletAmmoContainer = bulletAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(bulletAmmoContainer, AmmoRequest);
 
             _maxActiveTime = D_chaingunShieldMod.MaxActivateTime;
             _timeUnitToSpendAmmo = D_chaingunShieldMod.TimeUnitToSpendAmmo;
             _shieldActivated = false;
 
+            #region Events
             chaingunInput.OnShieldModEnableInputDown += OnEnableInputDown;
             chaingunInput.OnShieldModEnableInputPressed += OnEnableInputPressed;
             chaingunInput.OnShieldModDisableInputUp += OnDisableInputUp;
@@ -45,6 +46,7 @@ namespace GunClasses.ChaingunClasses
             OnChaingunShieldModIsActivated += SpendAmmo;
 
             OnChaingunShieldModRemove += RemoveShield;
+            #endregion
         }
 
         public override void Update()
@@ -109,9 +111,9 @@ namespace GunClasses.ChaingunClasses
             if (_timeUnitToSpendAmmo < 0)
             {
                 _timeUnitToSpendAmmo = D_chaingunShieldMod.TimeUnitToSpendAmmo;
-                if (_ammoRequest.GetAmmoValue() >= D_chaingunShieldMod.AmmoCost)
+                if (AmmoRequestSender.GetResourceValue() >= D_chaingunShieldMod.AmmoCost)
                 {
-                    _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_chaingunShieldMod.AmmoCost);
+                    AmmoRequest?.Invoke(-D_chaingunShieldMod.AmmoCost);
                 }
                 else
                 {

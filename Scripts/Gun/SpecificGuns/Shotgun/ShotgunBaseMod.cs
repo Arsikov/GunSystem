@@ -20,17 +20,18 @@ namespace GunClasses.ShotgunClasses
 
             AmmoRequestSender = new GunAmmoRequest(shellAmmoContainer, AmmoRequest);
 
+            #region Events
             shotgunInput.OnBaseModFireInputDown += OnInputDown;
 
             OnShotgunBaseModFire += SetLastTimeFired;
             OnShotgunBaseModFire += SpawnProjectile;
             OnShotgunBaseModFire += RequestAmmo;
+            #endregion
         }
-
 
         private void OnInputDown()
         {
-            if (AmmoRequestSender.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_shotgunBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > 0 && GetTimeSinceLastFirePassed(D_shotgunBaseMod.MinTimeBtwFire))
             {
                 OnShotgunBaseModFire?.Invoke();
             }

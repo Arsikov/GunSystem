@@ -2,10 +2,10 @@
 
 namespace GunClasses.Abilities
 {
-    public abstract class GunAbility
+    public interface IGunAbility
     {
         public event Action EventToListenTo;
 
-        protected abstract void Execute();
+        protected virtual void Execute() { }
     }
 }

@@ -17,7 +17,7 @@ namespace GunClasses.CannonClasses
         private CannonInput _cannonInput;
         private D_CannonFlameBlastMod D_cannonFlameBlastMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         private bool _modIsActivated;
         private float _chargeExtent;
@@ -29,11 +29,12 @@ namespace GunClasses.CannonClasses
 
             this.D_cannonFlameBlastMod = D_cannonFlameBlastMod;
 
-            _bulletAmmoContainer = bulletAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(bulletAmmoContainer, AmmoRequest);
 
             _modIsActivated = false;
             _chargeExtent = 0;
 
+            #region Events
             cannonInput.OnFlameBlastModEnableInputDown += OnEnableInputDown;
             cannonInput.OnFlameBlastModChargeInputPressed += OnChargeInputPressed;
             cannonInput.OnFlameBlastModDisableInputUp += OnDisableInputUp;
@@ -47,6 +48,7 @@ namespace GunClasses.CannonClasses
             OnCannonFlameBlastModFire += SetLastTimeFired;
             OnCannonFlameBlastModFire += RequestAmmo;
             OnCannonFlameBlastModFire += SpawnProjectile;
+            #endregion
         }
 
         #region OnInput
@@ -57,10 +59,12 @@ namespace GunClasses.CannonClasses
                 OnCannonFlameBlastModEnabled?.Invoke();
             }
         }
+
         private void OnChargeInputPressed()
         {
             OnCannonFlameBlastModIsCharging?.Invoke();
         }
+
         private void OnDisableInputUp()
         {
             if (_modIsActivated)
@@ -68,9 +72,10 @@ namespace GunClasses.CannonClasses
                 OnCannonFlameBlastModDisabled?.Invoke();
             }
         }
+
         private void OnFireInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > D_cannonFlameBlastMod.AmmoCost && _blastIsFullyCharged)
+            if (AmmoRequestSender.GetResourceValue() > D_cannonFlameBlastMod.AmmoCost && _blastIsFullyCharged)
             {
                 OnCannonFlameBlastModFire?.Invoke();
             }
@@ -103,9 +108,9 @@ namespace GunClasses.CannonClasses
 
             }
         }
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_cannonFlameBlastMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_cannonFlameBlastMod.AmmoCost);
         }
         #endregion
     }

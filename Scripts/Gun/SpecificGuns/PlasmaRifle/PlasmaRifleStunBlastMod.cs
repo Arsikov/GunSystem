@@ -25,10 +25,12 @@ namespace GunClasses.PlasmaClasses
             _currentStunBlastAmount = 0;
             _currentStunBlastChargeExtent = 0;
 
+            #region Events
             plasmaRifleInput.OnStunBlastModFireInputDown += OnInputDown;
             plasmaRifleBaseMod.OnPlasmaRifleBaseModFire += ChargeStunBlast;
 
             OnPlasmaRifleStunBlastModFire += SpendStunBlastAmount;
+            #endregion
         }
 
         private void OnInputDown()
@@ -55,7 +57,7 @@ namespace GunClasses.PlasmaClasses
 
             if (_currentStunBlastAmount == D_plasmaRifleStunBlastMod.BaseShotToBlastWeightRelation)
             {
-                if (_currentStunBlastAmount == D_plasmaRifleStunBlastMod.BlastMaxAmoutn)
+                if (_currentStunBlastAmount == D_plasmaRifleStunBlastMod.BlastMaxAmount)
                 {
                     return;
                 }

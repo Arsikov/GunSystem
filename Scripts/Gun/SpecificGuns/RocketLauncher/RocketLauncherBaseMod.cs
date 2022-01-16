@@ -7,12 +7,12 @@ namespace GunClasses.RocketClasses
     {
         public event Action<int> AmmoRequest;
 
-        public event Action OnShotgunBaseModFire;
+        public event Action OnRocketLauncherBaseModFire;
 
         private RocketLauncherInput _rocketLauncherInput;
         private D_RocketLauncherBaseMod D_rocketLauncherBaseMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         public RocketLauncherBaseMod(RocketLauncherInput rocketLauncherInput, D_RocketLauncherBaseMod D_rocketLauncherBaseMod, GunShellAmmoContainer shellAmmoContainer)
         {
@@ -20,20 +20,22 @@ namespace GunClasses.RocketClasses
 
             this.D_rocketLauncherBaseMod = D_rocketLauncherBaseMod;
 
-            _shellAmmoContainer = shellAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(shellAmmoContainer, AmmoRequest);
 
+            #region Events
             rocketLauncherInput.OnBaseModFireInputDown += OnInputDown;
 
-            OnShotgunBaseModFire += SetLastTimeFired;
-            OnShotgunBaseModFire += SpawnProjectile;
-            OnShotgunBaseModFire += RequestAmmo;
+            OnRocketLauncherBaseModFire += SetLastTimeFired;
+            OnRocketLauncherBaseModFire += SpawnProjectile;
+            OnRocketLauncherBaseModFire += RequestAmmo;
+            #endregion
         }
 
         private void OnInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_rocketLauncherBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > 0 && GetTimeSinceLastFirePassed(D_rocketLauncherBaseMod.MinTimeBtwFire))
             {
-                OnShotgunBaseModFire?.Invoke();
+                OnRocketLauncherBaseModFire?.Invoke();
             }
         }
 
@@ -42,9 +44,9 @@ namespace GunClasses.RocketClasses
 
         }
 
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_rocketLauncherBaseMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_rocketLauncherBaseMod.AmmoCost);
         }
     }
 }

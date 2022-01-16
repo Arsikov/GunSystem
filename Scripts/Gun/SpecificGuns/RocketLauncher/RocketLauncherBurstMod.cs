@@ -23,17 +23,20 @@ namespace GunClasses.RocketClasses
         private float _chargeExtent;
         private bool _burstIsFullyCharged;
 
+        public GunAmmoRequest AmmoRequestSender { get; }
+
         public RocketLauncherBurstMod(RocketLauncherInput rocketLauncherInput, D_RocketLauncherBurstMod D_rocketLauncherBurstMod, GunShellAmmoContainer shellAmmoContainer)
         {
             _rocketLauncherInput = rocketLauncherInput;
 
             this.D_rocketLauncherBurstMod = D_rocketLauncherBurstMod;
 
-            _shellAmmoContainer = shellAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(shellAmmoContainer, AmmoRequest);
 
             _modIsActivated = false;
             _chargeExtent = 0;
 
+            #region Events
             rocketLauncherInput.OnBurstModEnableInputDown += OnEnableInputDown;
             rocketLauncherInput.OnBurstModChargeInputPressed += OnChargeInputPressed;
             rocketLauncherInput.OnBurstModDisableInputUp += OnDisableInputUp;
@@ -47,6 +50,7 @@ namespace GunClasses.RocketClasses
             OnRocketLauncherBurstModFire += SetLastTimeFired;
             OnRocketLauncherBurstModFire += RequestAmmo;
             OnRocketLauncherBurstModFire += SpawnProjectile;
+            #endregion
         }
 
         #region OnInput
@@ -57,10 +61,12 @@ namespace GunClasses.RocketClasses
                 OnRocketLauncherBurstModEnabled?.Invoke();
             }
         }
+
         private void OnChargeInputPressed()
         {
             OnRocketLauncherBurstModIsCharging?.Invoke();
         }
+
         private void OnDisableInputUp()
         {
             if (_modIsActivated)
@@ -68,20 +74,22 @@ namespace GunClasses.RocketClasses
                 OnRocketLauncherBurstModDisabled?.Invoke();
             }
         }
+
         private void OnFireInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > D_rocketLauncherBurstMod.AmmoCost && _burstIsFullyCharged)
+            if (_ammoRequest.GetResourceValue() > D_rocketLauncherBurstMod.AmmoCost && _burstIsFullyCharged)
             {
                 OnRocketLauncherBurstModFire?.Invoke();
             }
         }
         #endregion
 
-        #region MethodsCalleddOnEvent
+        #region OnEvent
         private void OnBurstModEnabled()
         {
             _modIsActivated = true;
         }
+
         private void OnBurstModCharging()
         {
             _chargeExtent += Time.deltaTime;
@@ -91,11 +99,13 @@ namespace GunClasses.RocketClasses
                 _burstIsFullyCharged = true;
             }
         }
+
         private void OnBurstModDisabled()
         {
             _modIsActivated = false;
             _burstIsFullyCharged = false;
         }
+
         private void SpawnProjectile()
         {
             if (_burstIsFullyCharged)
@@ -103,9 +113,10 @@ namespace GunClasses.RocketClasses
 
             }
         }
-        public void RequestAmmo()
+
+        protected void RequestAmmo()
         {
-            _shellAmmoContainer.CallOnModifyAmmoEvent(-D_rocketLauncherBurstMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_rocketLauncherBurstMod.AmmoCost);
         }
         #endregion
     }

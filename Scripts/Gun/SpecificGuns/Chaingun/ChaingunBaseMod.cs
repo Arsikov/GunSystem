@@ -13,7 +13,7 @@ namespace GunClasses.ChaingunClasses
         private ChaingunInput _chaingunInput;
         private D_ChaingunBaseMod D_chaingunBaseMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         private float _attackTime;
 
@@ -23,24 +23,27 @@ namespace GunClasses.ChaingunClasses
 
             this.D_chaingunBaseMod = D_chaingunBaseMod;
 
-            _bulletAmmoContainer = bulletAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(bulletAmmoContainer, AmmoRequest);
             _attackTime = D_chaingunBaseMod.AttackTime;
 
+            #region Events
             chaingunInput.OnBaseModFireInputDown += OnInputDown;
             chaingunInput.OnBaseModFireInputPressed += OnInputPressed;
 
             OnChaingunBaseModFire += SetLastTimeFired;
             OnChaingunBaseModFire += RequestAmmo;
             OnChaingunBaseModFire += SpawnProjectile;
+            #endregion
         }
 
         private void OnInputDown()
         {
-            if (_bulletAmmoContainer.AmmoAmount > 0 && GetTimeSinceLastFirePassed(D_chaingunBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > 0 && GetTimeSinceLastFirePassed(D_chaingunBaseMod.MinTimeBtwFire))
             {
                 OnChaingunBaseModFire?.Invoke();
             }
         }
+
         private void OnInputPressed()
         {
             _attackTime -= Time.deltaTime;
@@ -57,9 +60,9 @@ namespace GunClasses.ChaingunClasses
 
         }
 
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_chaingunBaseMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_chaingunBaseMod.AmmoCost);
         }
     }
 }

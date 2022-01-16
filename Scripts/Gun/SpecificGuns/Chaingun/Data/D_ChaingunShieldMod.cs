@@ -1,8 +1,9 @@
-﻿using GunClasses.DataClasses;
-using UnityEngine;
+﻿using UnityEngine;
+using GunClasses.DataClasses;
 
 namespace GunClasses.ChaingunClasses
 {
+    [CreateAssetMenu(menuName = "Gun/Mod/Chaingun/Shield")]
     public class D_ChaingunShieldMod : D_GunMod
     {
         public GameObject ShieldPrefab;

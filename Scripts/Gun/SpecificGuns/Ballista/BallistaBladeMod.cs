@@ -17,7 +17,7 @@ namespace GunClasses.BallistaClasses
         private BallistaInput _ballistaInput;
         private D_BallistaBladeMod D_ballistaBladeMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         private bool _modIsActivated;
         private bool _modFullyCharged;
@@ -31,12 +31,13 @@ namespace GunClasses.BallistaClasses
 
             this.D_ballistaBladeMod = D_ballistaBladeMod;
 
-            _energyAmmoContainer = energyAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(energyAmmoContainer, AmmoRequest);
 
             _modIsActivated = false;
             _currentStepChargeExtent = 0;
             _currentStep = 0;
 
+            #region Events
             ballistaInput.OnBladeModEnableInputDown += OnEnableInputDown;
             ballistaInput.OnBladeModChargeInputPressed += OnChargeInputPressed;
             ballistaInput.OnBladeModDisableInputUp += OnDisableInputUp;
@@ -50,6 +51,7 @@ namespace GunClasses.BallistaClasses
             OnBallistaBladeModFire += SetLastTimeFired;
             OnBallistaBladeModFire += RequestAmmo;
             OnBallistaBladeModFire += SpawnProjectile;
+            #endregion
         }
 
         #region OnInput
@@ -60,10 +62,12 @@ namespace GunClasses.BallistaClasses
                 OnBallistaBladeModModEnabled?.Invoke();
             }
         }
+
         private void OnChargeInputPressed()
         {
             OnBallistaBladeModIsCharging?.Invoke();
         }
+
         private void OnDisableInputUp()
         {
             if (_modIsActivated)
@@ -71,10 +75,12 @@ namespace GunClasses.BallistaClasses
                 OnBallistaBladeModDisabled?.Invoke();
             }
         }
+
         private void OnFireInputDown()
         {
             
         }
+
         #endregion
 
         #region MethodsCalleddOnEvent
@@ -82,6 +88,7 @@ namespace GunClasses.BallistaClasses
         {
             _modIsActivated = true;
         }
+
         private void OnBurstModCharging()
         {
             while(!_modFullyCharged) _currentStepChargeExtent += Time.deltaTime;
@@ -94,6 +101,7 @@ namespace GunClasses.BallistaClasses
                 if (_currentStep == D_ballistaBladeMod.MaxChargeStepAmount) _modFullyCharged = true;
             }
         }
+
         private void OnBurstModDisabled()
         {
             _modIsActivated = false;
@@ -108,9 +116,9 @@ namespace GunClasses.BallistaClasses
             _currentStepChargeExtent = 0;
             _currentStep = 0;
         }
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _energyAmmoContainer.CallOnModifyAmmoEvent(-D_ballistaBladeMod.AmmoCost * D_ballistaBladeMod.ChrageStepAmmoMultiplier);
+            AmmoRequest?.Invoke(-D_ballistaBladeMod.AmmoCost * D_ballistaBladeMod.ChrageStepAmmoMultiplier);
         }
         #endregion
     }

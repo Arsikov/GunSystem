@@ -2,14 +2,16 @@
 
 namespace GunClasses.Abilities
 {
-    public class TargetStun : GunAbility
+    public class TargetStun : IGunAbility
     {
+        public event Action EventToListenTo;
+
         public TargetStun()
         {
 
         }
 
-        protected override void Execute()
+        protected void Execute()
         {
             throw new NotImplementedException();
         }

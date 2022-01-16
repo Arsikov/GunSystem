@@ -1,4 +1,5 @@
 ﻿using System;
+using ResourceClasses;
 
 namespace GunClasses.AmmoClasses
 {
@@ -6,8 +7,8 @@ namespace GunClasses.AmmoClasses
     {
         public event Action<int> AmmoRequest;
 
-        public GunAmmoRequest AmmoRequestSender { get; set; }
+        public ResourceRequest AmmoRequestSender { get; }
 
-        protected void RequestAmmo();
+        protected virtual void RequestAmmo() { }
     }
 }

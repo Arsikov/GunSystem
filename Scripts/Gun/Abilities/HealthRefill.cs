@@ -2,13 +2,16 @@
 
 namespace GunClasses.Abilities
 {
-    public class HealthRefill : GunAbility
+    public class HealthRefill : IGunAbility
     {
+        public event Action EventToListenTo;
+
         public HealthRefill()
         {
 
         }
-        protected override void Execute()
+
+        protected void Execute()
         {
             throw new NotImplementedException();
         }

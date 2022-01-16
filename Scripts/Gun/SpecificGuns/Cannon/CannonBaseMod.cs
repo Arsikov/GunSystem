@@ -13,7 +13,7 @@ namespace GunClasses.CannonClasses
         private CannonInput _cannonInput;
         private D_CannonBaseMod D_cannonBaseMod;
 
-        protected GunAmmoRequest _ammoRequest;
+        public GunAmmoRequest AmmoRequestSender { get; }
 
         public CannonBaseMod(CannonInput cannonInput, D_CannonBaseMod D_cannonBaseMod, GunBulletAmmoContainer bulletAmmoContainer)
         {
@@ -21,18 +21,20 @@ namespace GunClasses.CannonClasses
 
             this.D_cannonBaseMod = D_cannonBaseMod;
 
-            _bulletAmmoContainer = bulletAmmoContainer;
+            AmmoRequestSender = new GunAmmoRequest(bulletAmmoContainer, AmmoRequest);
 
+            #region Events
             cannonInput.OnBaseModFireInputDown += OnInputDown;
 
             OnCannonBaseModFire += SetLastTimeFired;
             OnCannonBaseModFire += RequestAmmo;
             OnCannonBaseModFire += SpawnProjectile;
+            #endregion
         }
 
         private void OnInputDown()
         {
-            if (_ammoRequest.GetAmmoValue() > 0 && GetTimeSinceLastFirePassed(D_cannonBaseMod.MinTimeBtwFire))
+            if (AmmoRequestSender.GetResourceValue() > 0 && GetTimeSinceLastFirePassed(D_cannonBaseMod.MinTimeBtwFire))
             {
                 OnCannonBaseModFire?.Invoke();
             }
@@ -43,9 +45,9 @@ namespace GunClasses.CannonClasses
 
         }
 
-        public void RequestAmmo()
+        protected void RequestAmmo()
         {
-            _bulletAmmoContainer.CallOnModifyAmmoEvent(-D_cannonBaseMod.AmmoCost);
+            AmmoRequest?.Invoke(-D_cannonBaseMod.AmmoCost);
         }
     }
 }

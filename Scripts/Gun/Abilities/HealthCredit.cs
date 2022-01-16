@@ -2,14 +2,16 @@
 
 namespace GunClasses.Abilities
 {
-    public class HealthCredit : GunAbility
+    public class HealthCredit : IGunAbility
     {
+        public event Action EventToListenTo;
+
         public HealthCredit()
         {
 
         }
 
-        protected override void Execute()
+        protected void Execute()
         {
             throw new NotImplementedException();
         }

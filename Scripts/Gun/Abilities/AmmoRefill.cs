@@ -2,13 +2,16 @@
 
 namespace GunClasses.Abilities
 { 
-    public class AmmoRefill : GunAbility
+    public class AmmoRefill : IGunAbility
     {
+        public event Action EventToListenTo;
+
         public AmmoRefill()
         {
 
         }
-        protected override void Execute()
+
+        protected void Execute()
         {
             throw new NotImplementedException();
         }
